@@ -8,18 +8,34 @@ app = Flask(__name__)
 def index():
     if request.method == 'POST':
         if 'file' not in request.files:
-            return render_template('index.html', error = 'No file part')
+            return render_template('index.html', error='No file part')
+
         file = request.files['file']
+
         if file.filename == '':
-            return render_template('index.html', error = 'No file selected')
+            return render_template('index.html', error='No selected file')
+
         if file:
-            file_path = 'uploaded_file.txt'
-            file.save(file_path)
-            stop_words = ["is","a","the","and","are","about","it","lets"]
-            tokens, frequency = tokeniser.process_file(file_path, stop_words)
-            os.remove(file_path)
-            return render_template('result.html', tokens=tokens, frequency = frequency)
-        return render_template('index.html')
+            try:
+                file_path = "uploaded_file.txt"
+                file.save(file_path)
+                stop_words = ["is", "a", "the", "and", "are", "about", "it", "lets"]
+                tokens, frequency = tokeniser.process_file(file_path, stop_words)
+                os.remove(file_path)
+
+                if tokens is not None and frequency is not None:
+                    return render_template('result.html', tokens=tokens, frequency=frequency)
+                else:
+                    return render_template('index.html', error="Error in file processing. Please try again.")
+
+            except Exception as e:
+                print(f"Error: {e}")
+                return render_template('index.html', error=f"An error occurred: {e}")
+
+        else:
+            return render_template('index.html', error="An unknown error occurred.")
+
+    return render_template('index.html')
     
 @app.route('/result')
 def results():

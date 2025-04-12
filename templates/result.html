@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Tokenization Results</title>
+    <title>Processed Result</title>
   </head>
   <body>
-    <h1> Tokenization results </h1>
-    <h2> Tokens: </h2>
-    <p>{{tokens}} </p>
-    <h2> Token frequency: </p>
-    <p>{{ frequency}} </p>
-    <a href = '/'> Upload answers file </a>
+    <h1>Tokenized Words & Frequencies</h1>
+
+    <h2>Tokens:</h2>
+    <ul>
+      {% for token in tokens %}
+      <li>{{ token }}</li>
+      {% endfor %}
+    </ul>
+
+    <h2>Word Frequencies:</h2>
+    <ul>
+      {% for word, count in frequency.items() %}
+      <li>{{ word }}: {{ count }}</li>
+      {% endfor %}
+    </ul>
+
+    <br /><a href="/">Go Back</a>
   </body>
 </html>
