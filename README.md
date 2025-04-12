@@ -1,6 +1,4 @@
-# TokenFlow->Tokenization-and-Frequency
-
-# TokenTally - Simple Text Tokenizer and Frequency Analyzer
+# TokenFlow - Text tokenizer and Frequency analyser
 
 This project is a basic text tokenizer and frequency analyzer implemented in Python, with a Flask web application interface. It provides functionality to upload a text file, tokenize it, and display the tokenized output along with the frequency of each token.
 
@@ -20,7 +18,6 @@ This project is a basic text tokenizer and frequency analyzer implemented in Pyt
 2.  **Running the Application:**
     * Place `tokeniser.py` and `app.py` in the same directory.
     * Run `app.py`: `python app.py`
-    * Open your web browser and navigate to `http://127.0.0.1:5000/`.
 3.  **Using the Web App:**
     * Upload a text file using the provided form.
     * The tokenized output and token frequencies will be displayed on the results page.
