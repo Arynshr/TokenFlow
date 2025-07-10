@@ -3,14 +3,14 @@ from abc import ABC, abstractmethod
 from functools import wraps
 import regex as re 
 
-from .config import SPLIT_PATTERN, BOUNDARY_PATTERNS
+from .config import SPLIT_PATTERN, BOUNDARY_PATTERNS, CHUNK_SIZE
 from utils.logging_utils import log_method
 
 
 class BaseSplitter(ABC):
     #Base Class for splitter
     @abstractmethod
-    def split(self, text: str) -> list[str]:
+    def split(self, text: str) -> List[str]:
         pass
     
 class RegexSplitter(BaseSplitter):
@@ -20,7 +20,7 @@ class RegexSplitter(BaseSplitter):
         self.compiled_pattern = re.compile(self.pattern)
         
     @log_method
-    def split(self, text: str) -> list[str]:
+    def split(self, text: str) -> List[str]:
         if not text:
             return []
         matches = self.compiled_pattern.findall(text)
@@ -59,7 +59,7 @@ class Pattern_manager:
             raise ValueError(f"Unknown Strategy: {strategy_name}")
         self.activestrategy = strategy_name
         
-    def split_with_Boundary_detection(self, text: str, detector: BoundaryDetector) -> list[str]:
+    def split_with_Boundary_detection(self, text: str, detector: BoundaryDetector) -> List[str]:
         chunks, pos = [] ,0
         while pos <= len(text):
             end_pos = min(pos + CHUNK_SIZE, len(text))
@@ -70,3 +70,4 @@ class Pattern_manager:
             pos = adj_pos
         return chunks
     
+    list
