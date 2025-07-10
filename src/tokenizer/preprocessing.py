@@ -2,7 +2,7 @@ import unicodedata as uni
 import regex as re 
 from .config import FORM, LOWERCASE, KEEP_ASCII
 from .config import MIN_LEN, MAX_LEN
-from utils.logging_utils import log_preprocessor
+from utils.logging_utils import log_method
 
 # Preprocessing class for raw text corpus
 class TextNormalizer:
@@ -44,7 +44,7 @@ class Validate_Preprocessor:
 validator = Validate_Preprocessor(MIN_LEN, MAX_LEN)
 normalizer = TextNormalizer(FORM, LOWERCASE, KEEP_ASCII)
 
-@log_preprocessor
+@log_method
 def preprocess(text: str) -> str:
     text = validator.validate(text)
     text = normalizer.normalize(text)
