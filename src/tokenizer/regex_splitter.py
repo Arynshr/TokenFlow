@@ -1,10 +1,9 @@
 from typing import List, Dict, Optional
 from abc import ABC, abstractmethod
-from functools import wraps
 import regex as re 
 
 from .config import SPLIT_PATTERN, BOUNDARY_PATTERNS, CHUNK_SIZE
-from utils.logging_utils import log_method
+from utils.logging_utils import log_method, log_performance
 
 
 class BaseSplitter(ABC):
@@ -20,6 +19,7 @@ class RegexSplitter(BaseSplitter):
         self.compiled_pattern = re.compile(self.pattern)
         
     @log_method
+    @log_performance
     def split(self, text: str) -> List[str]:
         if not text:
             return []
@@ -31,7 +31,9 @@ class BoundaryDetector:
         self.boundary_pattern = {
             name: re.compile(pattern) for name, pattern in BOUNDARY_PATTERNS.items()
         }
-        
+    
+    @log_method
+    @log_performance
     def detect_boundaries(self, text: str, position: int) -> Dict[str, bool]:
         return{
             name: bool(p.match(text, position)) if position < len(text) else False
@@ -53,12 +55,24 @@ class Pattern_manager:
             'detector': BoundaryDetector()
         }
         self.activestrategy = 'regex'
-        
+     
     def set_strategy(self, strategy_name: str) -> None:
         if strategy_name not in self.strategies:
             raise ValueError(f"Unknown Strategy: {strategy_name}")
         self.activestrategy = strategy_name
+    
+    @log_method
+    @log_performance    
+    def split_text(self, text: str, strategy: Optional[str] = None) -> List[str]:
+        strategy_name = strategy or self.activestrategy
+        if strategy_name == 'regex':
+            return self.strategies['regex'].split(text)
+        elif strategy_name == 'boundary_detector':
+            return self.split_with_Boundary_detection(text, self.strategies['BoundaryDetector'])
+        raise ValueError(f"Invalid strategy: {strategy_name}")
         
+    @log_method
+    @log_performance
     def split_with_Boundary_detection(self, text: str, detector: BoundaryDetector) -> List[str]:
         chunks, pos = [] ,0
         while pos <= len(text):
@@ -70,4 +84,3 @@ class Pattern_manager:
             pos = adj_pos
         return chunks
     
-    list
